@@ -8,6 +8,7 @@ import {
   getUpdateSubscription,
   getUserSubscriptions,
 } from "../controller/subscription.controller.js";
+
 import authorize from "../middleware/auth.middleware.js";
 
 const subscriptionRouter = Router();
