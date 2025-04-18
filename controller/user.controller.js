@@ -1,4 +1,4 @@
-import User from '../models/user.model.js'
+import User from "../model/user.model.js";
 import bcrypt from "bcryptjs";
 
 export const getUsers = async (req, res, next) => {
@@ -9,14 +9,14 @@ export const getUsers = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 export const getUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).select('-password');
+    const user = await User.findById(req.params.id).select("-password");
 
     if (!user) {
-      const error = new Error('User not found');
+      const error = new Error("User not found");
       error.statusCode = 404;
       throw error;
     }
@@ -25,26 +25,32 @@ export const getUser = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 export const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, email, password } = req.body;
+
+    const updatedData = { name, email };
+
     if (password) {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      req.body.password = hashedPassword;
+      updatedData.password = await bcrypt.hash(password, salt);
     }
-    const user = await User.findByIdAndUpdate(id, req.body, {
+
+    const user = await User.findByIdAndUpdate(id, updatedData, {
       new: true,
       runValidators: true,
     });
+
     if (!user) {
-      const error = new Error("User not found");
-      error.statusCode = 404;
-      throw error;
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
+
     res.status(200).json({
       success: true,
       message: "User updated successfully",
