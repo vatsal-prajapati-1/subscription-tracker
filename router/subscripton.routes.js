@@ -19,9 +19,9 @@ subscriptionRouter.get("/:id", getSubscriptionDetails);
 
 subscriptionRouter.post("/", authorize, createSubscription);
 
-subscriptionRouter.put("/", authorize, getUpdateSubscription);
+subscriptionRouter.put("/:id", authorize, getUpdateSubscription);
 
-subscriptionRouter.delete("/", authorize, deleteSubscription);
+subscriptionRouter.delete("/:id", authorize, deleteSubscription);
 
 subscriptionRouter.get("/user/:id", authorize, getUserSubscriptions);
 
